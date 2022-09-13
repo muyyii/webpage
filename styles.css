@@ -1,4 +1,4 @@
-h2 {
+h1 {
 	font-family: 'Libre Caslon Display', serif;
 }
 
@@ -6,4 +6,5 @@ h2 {
 	position: fixed;
 	bottom: 0;
 	right: 0;
+	z-index: -1;
 }

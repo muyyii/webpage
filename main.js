@@ -78,15 +78,15 @@ function draw(){
             }
             
             if (magSq > 1){
-                canvasDataFinal.data[index + 0] = 0;
-                canvasDataFinal.data[index + 1] = 0;
-                canvasDataFinal.data[index + 2] = 0;
+                canvasDataFinal.data[index + 0] = 255;
+                canvasDataFinal.data[index + 1] = 255;
+                canvasDataFinal.data[index + 2] = 255;
                 canvasDataFinal.data[index + 3] = 255;
             }
         }
     }
     
-    c.fillStyle = "#000";
+    c.fillStyle = "#fff";
     c.fillRect(0, 0 ,w, h);
     
     secondCtx.putImageData(canvasDataFinal, 0, 0);
