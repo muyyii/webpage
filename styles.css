@@ -1,3 +1,9 @@
 h2 {
 	font-family: 'Libre Caslon Display', serif;
 }
+
+#canvas {
+	position: fixed;
+	bottom: 0;
+	right: 0;
+}
