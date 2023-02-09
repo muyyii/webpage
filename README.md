@@ -8,3 +8,7 @@
 > https://codepen.io/abxlfazl/pen/VwKzaEm
 > https://codepen.io/TurkAysenur/pen/gORaboY
 > https://codepen.io/Zajno/pen/YzjRaOe
+
+---
+- If I want to push this to origin git I need to write in the CLI: 
+`git push origin main`
