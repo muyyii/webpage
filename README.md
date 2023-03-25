@@ -28,3 +28,8 @@
 --- 
 
 Remember my webpage is hosted at vercel.
+
+---
+
+#### Interesting stuff
+- [Codepen con ES6 util para aprender, confeti](https://codepen.io/killroy/pen/ZEMxMdr?editors=1010)
