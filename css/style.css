@@ -216,6 +216,10 @@ body {
   }
 }
 
+.center .canvas-bg {
+	border-radius: 20px;
+}
+
 /*
 .center .canvas-bg {
   width: 320px;
