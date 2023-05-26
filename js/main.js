@@ -8,6 +8,9 @@ const canvas = document.getElementById("canvas"),
 let w = canvas.width = 300;
 let h = canvas.height = 300;
 
+let windowW = window.innerHeight;
+let windowH = window.innerWidth;
+
 let xoff = canvas.getBoundingClientRect().x;
 let yoff = canvas.getBoundingClientRect().y;
 
@@ -53,8 +56,7 @@ document.onmousemove = function(e) {
     
     mouseX = event.clientX - xoff;
     mouseY = event.clientY - yoff;
-    
-    
+   	
 	if(click){
 		if(drag){
 			point[drag-1].x = mouseX - drag_dx; 
@@ -90,3 +92,15 @@ document.onmousedown = function(e){
 document.onmouseup = function(e){
   drag = click = false;
 }
+
+// -------- Other events --------
+
+window.onresize = (e) => {
+	let event = e || window.event;
+	
+	xoff = canvas.getBoundingClientRect().x;
+	yoff = canvas.getBoundingClientRect().y;
+
+	windowW = window.innerHeight;
+	windowH = window.innerWidth;
+};

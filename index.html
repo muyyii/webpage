@@ -20,33 +20,49 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com"> 
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
 		<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="css/styles.css">
+		<link rel="stylesheet" href="css/style.css">
 	</head>
 
 	<body>
+		<noscript> You need to enable JavaScript to run this app. </noscript>
 
-		<noscript>
-			You need to enable JavaScript to run this app.
-		</noscript>
-
-
-		<h1>Lucas Machain</h1>	
-
-		<div class="header">
-			<div class="header-menu">
-				<a href="#">Misk</a>
-				<a href="#">Helmet</a>
-				<a href="#">Bottle</a>
-				<a href="#">Chest</a>
+		<div class="container">
+			<div class="header">
+				<h1>Lucas Machain</h1>	
+				<div class="header-menu">
+					<a href="#">Helmet</a>
+					<a href="#">Book</a>
+					<a href="#">Bottle</a>
+					<a href="#">Chest</a>
+				</div>
 			</div>
+
+			<div class="main">
+				<div class="left-side">
+					<div>
+						<h3 class="main-header">Basics</h3>
+						<h1 class="main-title">Drag & Drop</h1>
+						<h2 class="main-subtitle">Usefull as always</h2>
+					</div>
+
+				<div class="content">
+					<div class="content-title">This is a Drag and Drop</div>
+					<div class="content-subtitle">Witness the elegance of Drag and Drop, an HTML5 marvel. With a touch, elements gracefully rearrange on the canvas, granting users creative control. It liberates from rigidity, empowering artistic exploration. A digital symphony of spatial harmony.</div>
+					<div class="content-more">Such a technique, akin to the artistry of rearranging physical objects, beseeches our admiration.</div>
+				</div>
+			</div>
+				
+			<div class="center">
+				<div class="canvas-component">
+					<canvas class="canvas-bg" id="canvas"/></canvas>
+				</div>
+			</div>
+		<!-- end of main -->
 		</div>
+	<!-- end of container -->
+	</div>
 
-		<div class="middle">
-			<canvas id="canvas"></canvas>
-		</div>
+	<script src="js/main.js"></script>
+</body>
 
-		<script src="js/main.js"></script>
-
-
-	</body>
 </html>
