@@ -2,6 +2,12 @@
 
 [Link](https://muyyii.github.io/webpage/)
 
+### And this is an update (2024)
+> - https://codepen.io/knyttneve/embed/LKrGBy/?theme-id=modal#html-box
+> - https://codepen.io/dudleystorey/pen/yaWzzR
+> - https://codepen.io/christian-thorvik/pen/jOooyBV
+> - https://codepen.io/kiranpate1/pen/ExBpaeW
+> - https://codepen.io/jh3y/pen/NWQYPvy
 
 ### As for now I'm interested in these codepens for inspiration
 
