@@ -29,17 +29,21 @@ generator in python. Creating a custom tool for helping me to append canvas expe
 > - https://codepen.io/carolineartz/pen/rNaGQYo 
 > - https://codepen.io/mikemai2awesome/pen/zYLLJzy 
 
+#### Interesting stuff
+- [Codepen con ES6 util para aprender, confeti](https://codepen.io/killroy/pen/ZEMxMdr?editors=1010)
+
 ---
+### COMMANDS:
+
 - If I want to push this to origin git I need to write in the CLI: 
 
 `git push origin main`
 
-
 --- 
 
-Remember my webpage is hosted at vercel.
+REMOVE THIS:
+    Remember my webpage is hosted at vercel.
 
 ---
 
-#### Interesting stuff
-- [Codepen con ES6 util para aprender, confeti](https://codepen.io/killroy/pen/ZEMxMdr?editors=1010)
+
