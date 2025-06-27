@@ -2,6 +2,10 @@
 
 [Link](https://muyyii.github.io/webpage/)
 
+### Jun 2025 
+I've decided to start using this as a blog site template, I'm gonna use a static site
+generator in python. Creating a custom tool for helping me to append canvas experiments.
+
 ### And this is an update (2024)
 > - https://codepen.io/knyttneve/embed/LKrGBy/?theme-id=modal#html-box
 > - https://codepen.io/dudleystorey/pen/yaWzzR
