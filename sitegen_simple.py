@@ -6,66 +6,78 @@ Converts markdown files to HTML blog posts with an index page.
 
 import os
 import re
+import shutil
 from datetime import datetime
 from pathlib import Path
 import markdown
 from markdown.extensions import meta
 
-# HTML Templates
-INDEX_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Blog</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="header">
-        <h1>My Blog</h1>
-        <p>Welcome to my personal blog</p>
-    </div>
-    
-    <ul class="post-list">
-        {posts}
-    </ul>
-</body>
-</html>"""
 
-POST_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title} - My Blog</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="back-link">
-        <a href="index.html">← Back to Blog</a>
-    </div>
+class CanvasProcessor:
+    """Handles canvas element processing in markdown"""
     
-    <article>
-        <div class="post-header">
-            <h1 class="post-title">{title}</h1>
-            <div class="post-meta">
-                Published on {date} • {read_time} min read
-            </div>
-        </div>
+    def __init__(self, js_source_dir="js"):
+        self.js_source_dir = Path(js_source_dir)
+    
+    def process_canvas_tags(self, content, output_dir):
+        """Process custom canvas tags in markdown content"""
+        # Pattern to match: {{canvas:filename.js:canvas-id:width:height}}
+        canvas_pattern = r'\{\{canvas:([^:]+):([^:]+):(\d+):(\d+)\}\}'
         
-        <div class="post-content">
-            {content}
-        </div>
-    </article>
-</body>
-</html>"""
+        def replace_canvas(match):
+            js_file = match.group(1)
+            canvas_id = match.group(2)
+            width = match.group(3)
+            height = match.group(4)
+            
+            # Copy JS file to output directory
+            js_source = self.js_source_dir / js_file
+            js_dest = output_dir / "js" / js_file
+            
+            if js_source.exists():
+                js_dest.parent.mkdir(exist_ok=True)
+                shutil.copy2(js_source, js_dest)
+                
+                # Generate canvas HTML
+                canvas_html = f'''
+<div class="canvas-container">
+    <canvas id="{canvas_id}" width="{width}" height="{height}"></canvas>
+</div>
+<script src="js/{js_file}"></script>
+'''
+                return canvas_html
+            else:
+                return f'<p><em>Canvas JS file not found: {js_file}</em></p>'
+        
+        return re.sub(canvas_pattern, replace_canvas, content)
+
 
 class BlogGenerator:
-    def __init__(self, posts_dir="posts", output_dir="docs"):
+    def __init__(self, posts_dir="posts", output_dir="docs", partials_dir="partials", images_dir="images", js_dir="js"):
         self.posts_dir = Path(posts_dir)
         self.output_dir = Path(output_dir)
+        self.partials_dir = Path(partials_dir)
+        self.images_dir = Path(images_dir)
+        self.js_dir = Path(js_dir)
         self.md = markdown.Markdown(extensions=['meta', 'codehilite', 'fenced_code'])
+        self.canvas_processor = CanvasProcessor(js_dir)
+
+    def copy_assets(self):
+        """Copy images and other assets to output directory"""
+        # Copy images
+        if self.images_dir.exists():
+            output_images = self.output_dir / "images"
+            if output_images.exists():
+                shutil.rmtree(output_images)
+            shutil.copytree(self.images_dir, output_images)
+            print(f"Copied images from {self.images_dir} to {output_images}")
         
+        # Copy CSS if exists
+        css_file = Path("style.css")
+        if css_file.exists():
+            shutil.copy2(css_file, self.output_dir / "style.css")
+            print("Copied style.css")
+
     def estimate_read_time(self, text):
         """Estimate reading time based on word count (200 words per minute)"""
         word_count = len(text.split())
@@ -104,7 +116,13 @@ class BlogGenerator:
         
         with open(md_file, 'r', encoding='utf-8') as f:
             content = f.read()
+
+        with open(self.partials_dir / "post_template.html", 'r', encoding='utf-8') as f:
+            post_template = f.read()
         
+        # Process canvas elements before markdown conversion
+        content = self.canvas_processor.process_canvas_tags(content, self.output_dir)
+
         # Extract metadata and convert to HTML
         title, date, html_content = self.extract_metadata(content)
         
@@ -122,8 +140,9 @@ class BlogGenerator:
         # Generate HTML filename
         html_filename = md_file.stem + '.html'
         
+        #post_template = self.get_template("post")
         # Create post HTML
-        post_html = POST_TEMPLATE.format(
+        post_html = post_template.format(
             title=title,
             date=date,
             read_time=read_time,
@@ -147,6 +166,10 @@ class BlogGenerator:
         """Generate the index page with all blog posts"""
         print("Generating index...")
         
+        print("Loading index template...")
+        with open(self.partials_dir / "index_template.html", 'r', encoding='utf-8') as f:
+            index_template = f.read()
+        
         # Sort posts by date (newest first)
         posts.sort(key=lambda x: x['file_date'], reverse=True)
         
@@ -155,7 +178,7 @@ class BlogGenerator:
             post_item = f"""
         <li class="post-item">
             <h2 class="post-title">
-                <a href="{post['filename']}">{post['title']}</a>
+                <a href="docs/{post['filename']}">{post['title']}</a>
             </h2>
             <div class="post-meta">
                 {post['date']} • {post['read_time']} min read
@@ -163,10 +186,10 @@ class BlogGenerator:
         </li>"""
             post_items.append(post_item)
         
-        index_html = INDEX_TEMPLATE.format(posts=''.join(post_items))
+        index_html = index_template.format(posts=''.join(post_items))
         
         # Write index file
-        with open(self.output_dir / 'index.html', 'w', encoding='utf-8') as f:
+        with open('index.html', 'w', encoding='utf-8') as f:
             f.write(index_html)
     
     def generate(self):
@@ -176,6 +199,9 @@ class BlogGenerator:
         # Create output directory
         self.output_dir.mkdir(exist_ok=True)
         
+        # Copy assets (images, CSS, etc.)
+        self.copy_assets()
+
         # Find all markdown files
         md_files = list(self.posts_dir.glob('*.md'))
         
@@ -210,64 +236,16 @@ def main():
     # You can customize these paths
     posts_dir = "posts"
     output_dir = "docs"
+    partials_dir = "partials"
+    images_dir = "images"
+    js_dir = "js"
     
     # Check if posts directory exists
     if not Path(posts_dir).exists():
         print(f"Posts directory '{posts_dir}' not found!")
-        print("Creating example directory and files...")
-        
-        # Create example structure
-        Path(posts_dir).mkdir(exist_ok=True)
-        
-        # Create example markdown files
-        example_post1 = """---
-title: My First Blog Post
-date: December 20, 2024
----
-
-# My First Blog Post
-
-This is my first blog post! I'm excited to share my thoughts with the world.
-
-## What I'll Write About
-
-I plan to write about:
-- Technology
-- Programming
-- Life experiences
-
-Thanks for reading!
-"""
-        
-        example_post2 = """# Welcome to My Blog
-
-This is another example post. You can write in **markdown** format.
-
-## Features
-
-- Easy to write
-- Automatic HTML conversion
-- Reading time estimation
-
-```python
-print("Hello, World!")
-```
-
-> This is a quote example
-
-Enjoy blogging!
-"""
-        
-        with open(Path(posts_dir) / "first-post.md", "w") as f:
-            f.write(example_post1)
-        
-        with open(Path(posts_dir) / "welcome.md", "w") as f:
-            f.write(example_post2)
-        
-        print(f"Created example posts in '{posts_dir}' directory")
     
     # Generate the blog
-    generator = BlogGenerator(posts_dir, output_dir)
+    generator = BlogGenerator(posts_dir, output_dir, partials_dir, images_dir, js_dir)
     generator.generate()
 
 if __name__ == "__main__":
