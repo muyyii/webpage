@@ -1,6 +1,6 @@
 # webpage
 
-[Link](https://muyyii.github.io/webpage/)
+[Link](https://muyyii.github.io/webpage/index.html)
 
 ### Jun 2025 
 I've decided to start using this as a blog site template, I'm gonna use a static site
